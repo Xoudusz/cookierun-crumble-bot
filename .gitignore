@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+calibration.png
+unknown_quests.log
+templates/equip_button.png
+templates/start_bake_btn.png
+.superpowers/
