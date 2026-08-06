@@ -20,7 +20,7 @@ def ocr_quest_text(img: np.ndarray) -> str:
     crop = cv2.resize(crop, (w * 3, h * 3), interpolation=cv2.INTER_CUBIC)
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
     pil = Image.fromarray(gray)
-    text = pytesseract.image_to_string(pil, config="--psm 6")
+    text = pytesseract.image_to_string(pil, config="--psm 11 --oem 1")
     return text.strip().lower()
 
 

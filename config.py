@@ -40,7 +40,7 @@ NAV = {
     "use_chest_btn": (550, 850),    # "Use" button in popup after selecting chest
     "oven":          (380, 1720),   # oven button on main screen
     "back":          (540, 1860),   # X button to close any panel
-    "pull_x10":      (365, 1550),   # x10 pull button on gacha screen
+    "pull_x10":      (550, 1550),   # x10 pull button on gacha screen
     "start_bake_btn":(500, 1630),   # "Start" button on Auto Bake screen
 }
 
