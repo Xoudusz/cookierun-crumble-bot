@@ -84,7 +84,7 @@ def use_chest(adb: ADB) -> None:
     adb.tap(*config.NAV["select_chest"])
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["use_chest_btn"])
-    adb.sleep(config.NAV_WAIT)
+    adb.sleep(config.CHEST_ANIM_WAIT)   # wait for chest-open animation
     adb.tap(*config.TOP_CENTER_DISMISS)  # dismiss result popup (tap upper half)
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["back"])         # close inventory screen

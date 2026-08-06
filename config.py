@@ -8,6 +8,7 @@ MUMU_ADB_PORT = 7555
 CHECK_INTERVAL = 5       # seconds between main loop ticks
 NAV_WAIT       = 0.8     # seconds after each tap before screenshot
 CLAIM_WAIT     = 0.6     # seconds after tapping claim before dismissing popup
+CHEST_ANIM_WAIT = 3.0   # seconds for chest-open animation to finish
 
 # --- Screen ---
 SCREEN_W = 1080
