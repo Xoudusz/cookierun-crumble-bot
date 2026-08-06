@@ -77,11 +77,13 @@ templates/start_bake_btn.png
 0.1.0
 ```
 
-- [ ] **Step 3: Create GitHub repo (private)**
+- [ ] **Step 3: Verify repo exists**
 
 ```bash
-gh repo create Xoudusz/cookierun-crumble-bot --private --description "Cookie Run: Crumble quest automation bot (ADB + OpenCV + pytesseract)"
+gh repo view Xoudusz/cookierun-crumble-bot
 ```
+
+Expected: repo visible (already created by user).
 
 - [ ] **Step 4: Add remote and push**
 
