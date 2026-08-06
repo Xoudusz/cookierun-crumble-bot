@@ -21,6 +21,16 @@
 
 ---
 
+## Global Additions
+
+- GitHub repo: `Xoudusz/cookierun-crumble-bot` (private)
+- `VERSION` file in repo root, start at `0.1.0`
+- `CLAUDE.md` in repo root (Claude instructions)
+- `README.md` (Windows setup guide for the user)
+- `notes/projects/cookierun-bot.md` (source of truth, push to notes repo)
+
+---
+
 ## File Map
 
 | File | Responsibility |
@@ -35,6 +45,60 @@
 | `tests/test_adb.py` | ADB unit tests (mocked subprocess) |
 | `tests/test_detector.py` | Detector unit tests (synthetic images) |
 | `tests/test_quests.py` | Dispatch + handler unit tests (mocked ADB) |
+
+---
+
+### Task 0: GitHub repo setup
+
+**Files:**
+- Create: `VERSION`
+- Create: `.gitignore`
+
+**Interfaces:**
+- Produces: remote `origin` at `https://github.com/Xoudusz/cookierun-crumble-bot`; all subsequent tasks push to this remote
+
+- [ ] **Step 1: Create `.gitignore`**
+
+```
+__pycache__/
+*.pyc
+*.pyo
+.env
+calibration.png
+unknown_quests.log
+templates/equip_button.png
+templates/start_bake_btn.png
+.superpowers/
+```
+
+- [ ] **Step 2: Create `VERSION` file**
+
+```
+0.1.0
+```
+
+- [ ] **Step 3: Create GitHub repo (private)**
+
+```bash
+gh repo create Xoudusz/cookierun-crumble-bot --private --description "Cookie Run: Crumble quest automation bot (ADB + OpenCV + pytesseract)"
+```
+
+- [ ] **Step 4: Add remote and push**
+
+```bash
+git remote add origin https://github.com/Xoudusz/cookierun-crumble-bot.git
+git add VERSION .gitignore
+git commit -m "chore: initial repo setup"
+git push -u origin master
+```
+
+- [ ] **Step 5: Verify repo is live**
+
+```bash
+gh repo view Xoudusz/cookierun-crumble-bot
+```
+
+Expected: shows repo description, private, 1 commit.
 
 ---
 
@@ -1076,4 +1140,175 @@ Watch the log. Confirm it:
 ```bash
 git add templates/ config.py
 git commit -m "chore: calibrated coordinates and template crops"
+```
+
+---
+
+### Task 8: Documentation
+
+**Files:**
+- Create: `CLAUDE.md` (in repo root)
+- Create/update: `README.md`
+- Create: `/root/projects/notes/projects/cookierun-bot.md`
+
+**Interfaces:**
+- Consumes: completed codebase from Tasks 0–7
+- Produces: user-facing setup guide, Claude instructions, notes source-of-truth
+
+- [ ] **Step 1: Create `CLAUDE.md` in repo root**
+
+```markdown
+# cookierun-crumble-bot
+
+## Stack
+Python 3.10+, opencv-python, pytesseract, Pillow, ADB (Android platform tools)
+
+## Structure
+- `main.py` — entry point, main loop, `--calibrate` mode
+- `config.py` — ALL coordinates and thresholds — edit here after calibration
+- `adb.py` — ADB subprocess wrapper
+- `detector.py` — HSV yellow detection + template matching
+- `quests.py` — OCR dispatch + all quest handlers
+- `templates/` — PNG crops for template matching (not committed)
+
+## Run
+```bash
+python main.py               # start bot
+python main.py --calibrate   # dump calibration.png and print coord guide
+pytest tests/ -v             # run tests
+```
+
+## After changes
+Bump `VERSION`, commit, push.
+```
+
+- [ ] **Step 2: Create `README.md`**
+
+```markdown
+# Cookie Run: Crumble Quest Bot
+
+Automates daily quest completion in Cookie Run: Crumble via ADB to MuMu Player v6.
+
+## Requirements
+
+- Windows 10/11
+- [MuMu Player v6](https://www.mumuplayer.com/) with Cookie Run: Crumble installed
+- [Android Platform Tools](https://developer.android.com/tools/releases/platform-tools) — `adb` must be on PATH
+- [Tesseract-OCR](https://github.com/UB-Mannheim/tesseract/wiki) installed at `C:\Program Files\Tesseract-OCR\tesseract.exe`
+- Python 3.10+
+
+## Install
+
+```bash
+pip install -r requirements.txt
+```
+
+## Setup (first run)
+
+1. Start MuMu Player and launch Cookie Run: Crumble
+2. Navigate to the main game screen (quests visible)
+3. Run calibration:
+   ```bash
+   python main.py --calibrate
+   ```
+4. Open `calibration.png`, measure coordinates, fill in `config.py`
+5. Crop template images (see calibration output for instructions)
+
+## Run
+
+```bash
+python main.py
+```
+
+Press `Ctrl+C` to stop.
+
+## Quest types handled
+
+| Quest | Action |
+|---|---|
+| Clear stage | Wait (auto-completes) |
+| Defeat enemies | Wait (auto-completes) |
+| Pull pet gacha 10× | Navigates to pet gacha, pulls, returns |
+| Pull cookie gacha 10× | Navigates to cookie gacha, pulls, returns |
+| Use 1 chest | Opens inventory, uses chest, returns |
+| Bake gear in oven | Starts Auto Bake, waits for completion, returns |
+
+Unknown quest types are logged to `unknown_quests.log`.
+```
+
+- [ ] **Step 3: Create notes source-of-truth**
+
+Create `/root/projects/notes/projects/cookierun-bot.md`:
+
+```markdown
+---
+project: cookierun-bot
+version: 0.1.0
+repo: https://github.com/Xoudusz/cookierun-crumble-bot
+status: active
+---
+
+# Cookie Run: Crumble Quest Bot
+
+Windows Python bot that automates Cookie Run: Crumble daily quests via ADB to MuMu Player v6.
+
+## Stack
+
+- Python 3.10+, opencv-python, pytesseract, Pillow
+- ADB (Android platform tools) → MuMu Player v6 at `127.0.0.1:7555`
+- OpenCV HSV color detection for quest card state (yellow = claimable)
+- pytesseract OCR for quest text → keyword dispatch
+
+## Architecture
+
+```
+main loop (5s tick)
+  → check_global_interrupts (better-item popup, repeatable overlay)
+  → detect quest card state (HSV yellow)
+    → if claimable: tap claim → dismiss reward popup
+    → if not: OCR text → dispatch to handler
+        handlers: pull_pet_gacha, pull_cookie_gacha, use_chest,
+                  wait_stage, wait_enemies, bake_oven
+```
+
+## Key files
+
+| File | Role |
+|---|---|
+| `config.py` | All coordinates + thresholds — fill after `--calibrate` |
+| `detector.py` | `is_yellow(img, region)` + `find_template(img, path)` |
+| `quests.py` | `dispatch_quest(text)` + all handlers |
+| `main.py` | `check_global_interrupts` + main loop |
+| `templates/` | `equip_button.png`, `start_bake_btn.png` (not committed) |
+
+## Setup
+
+1. Install MuMu Player v6, ADB platform tools, Tesseract-OCR
+2. `pip install -r requirements.txt`
+3. `python main.py --calibrate` → measure coords in `calibration.png` → fill `config.py`
+4. Crop template PNGs from game screenshots
+5. `python main.py`
+
+## Roadmap
+
+### Done ✅
+- v0.1.0 — Initial implementation: all quest types, global interrupts, calibrate mode
+```
+
+- [ ] **Step 4: Commit docs to repo and push**
+
+```bash
+cd /root/projects/cookierun-bot
+git add CLAUDE.md README.md
+git commit -m "docs: add CLAUDE.md and README with Windows setup guide"
+git push
+```
+
+- [ ] **Step 5: Push notes**
+
+```bash
+cd /root/projects/notes
+git add projects/cookierun-bot.md
+git commit -m "cookierun-bot v0.1.0: initial quest automation bot"
+git push
 ```
