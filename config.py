@@ -21,7 +21,7 @@ YELLOW_V_MIN = 150
 YELLOW_RATIO = 0.30      # fraction of region pixels that must be yellow
 
 # --- Template confidence ---
-TEMPLATE_THRESHOLD = 0.80
+TEMPLATE_THRESHOLD = 0.95
 
 # --- Regions (x, y, w, h) ---
 QUEST_CARD_REGION  = (575, 1048, 490, 107)
