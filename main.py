@@ -1,7 +1,6 @@
 import argparse
 import logging
 import os
-import sys
 import time
 
 import cv2
@@ -93,8 +92,8 @@ def run_loop(adb: ADB) -> None:
         except KeyboardInterrupt:
             logger.info("Stopped by user")
             break
-        except RuntimeError as exc:
-            logger.error("ADB error: %s — reconnecting", exc)
+        except (RuntimeError, FileNotFoundError) as exc:
+            logger.error("Error: %s — reconnecting", exc)
             adb.connect()
 
 

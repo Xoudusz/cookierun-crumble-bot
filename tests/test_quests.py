@@ -1,5 +1,4 @@
 import pytest
-import time
 from unittest.mock import patch, MagicMock, call
 from quests import (
     dispatch_quest,
