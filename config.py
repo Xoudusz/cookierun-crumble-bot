@@ -39,10 +39,11 @@ NAV = {
     "pet_gacha":     (810, 1637),   # "► Pet Gacha ◄" tab
     "cookie_gacha":  (270, 1637),   # "► Cookie Gacha ◄" tab
     "inventory":     (820, 1101),   # tap quest card — shortcut navigates to relevant screen
-    "oven":          (55, 500),     # cart/oven icon on left side of game screen
+    "select_chest":  (200, 1150),   # tap chest item to select it
+    "use_chest_btn": (550, 850),    # "Use" button in popup after selecting chest
+    "oven":          (380, 1720),   # oven button on main screen
     "back":          (540, 1860),   # X button to close any panel
     "pull_x10":      (365, 1550),   # x10 pull button on gacha screen
-    "use_chest_btn": (540, 740),    # "Use" button in chest dialog
     "start_bake_btn":(500, 1630),   # "Start" button on Auto Bake screen
 }
 

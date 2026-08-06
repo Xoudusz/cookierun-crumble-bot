@@ -85,14 +85,16 @@ def test_use_chest_navigates_and_uses():
     adb = _mock_adb()
     config.NAV = {
         "inventory":     (200, 900),
-        "use_chest_btn": (360, 700),
+        "select_chest":  (200, 1150),
+        "use_chest_btn": (550, 850),
         "back":          (50, 50),
     }
     config.NAV_WAIT = 0
     use_chest(adb)
     taps = [c.args for c in adb.tap.call_args_list]
     assert (200, 900) in taps
-    assert (360, 700) in taps
+    assert (200, 1150) in taps
+    assert (550, 850) in taps
 
 
 def test_wait_stage_sleeps():
