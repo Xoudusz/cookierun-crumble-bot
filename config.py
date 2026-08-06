@@ -38,7 +38,7 @@ NAV = {
     "gacha_nav":     (980, 1835),   # Gacha icon in bottom nav bar
     "pet_gacha":     (810, 1637),   # "► Pet Gacha ◄" tab
     "cookie_gacha":  (270, 1637),   # "► Cookie Gacha ◄" tab
-    "inventory":     (0, 0),        # TODO: find the inventory nav button on main screen
+    "inventory":     (820, 1101),   # tap quest card — shortcut navigates to relevant screen
     "oven":          (55, 500),     # cart/oven icon on left side of game screen
     "back":          (540, 1860),   # X button to close any panel
     "pull_x10":      (365, 1550),   # x10 pull button on gacha screen
