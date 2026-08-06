@@ -54,6 +54,7 @@ def test_claim_quest_taps_claim_then_dismisses():
 def test_pull_pet_gacha_navigates_and_pulls():
     adb = _mock_adb()
     config.NAV = {
+        "gacha_nav": (999, 999),
         "pet_gacha": (100, 200),
         "pull_x10":  (300, 600),
         "back":      (50, 50),
@@ -68,6 +69,7 @@ def test_pull_pet_gacha_navigates_and_pulls():
 def test_pull_cookie_gacha_navigates_and_pulls():
     adb = _mock_adb()
     config.NAV = {
+        "gacha_nav":    (999, 999),
         "cookie_gacha": (150, 200),
         "pull_x10":     (300, 600),
         "back":         (50, 50),

@@ -10,8 +10,8 @@ NAV_WAIT       = 0.8     # seconds after each tap before screenshot
 CLAIM_WAIT     = 0.6     # seconds after tapping claim before dismissing popup
 
 # --- Screen ---
-SCREEN_W = 720
-SCREEN_H = 1280
+SCREEN_W = 1080
+SCREEN_H = 1920
 
 # --- HSV yellow detection ---
 YELLOW_H_LO = 20
@@ -23,26 +23,27 @@ YELLOW_RATIO = 0.30      # fraction of region pixels that must be yellow
 # --- Template confidence ---
 TEMPLATE_THRESHOLD = 0.80
 
-# --- Regions (x, y, w, h) — fill after running --calibrate ---
-QUEST_CARD_REGION  = (0, 0, 0, 0)
-QUEST_TEXT_REGION  = (0, 0, 0, 0)
-REPEATABLE_REGION  = (0, 0, 0, 0)
-BETTER_ITEM_REGION = (0, 0, 0, 0)
+# --- Regions (x, y, w, h) ---
+QUEST_CARD_REGION  = (575, 1048, 490, 107)
+QUEST_TEXT_REGION  = (660, 1053, 400, 100)
+REPEATABLE_REGION  = (575, 1048, 490, 107)  # same spot as quest card; verify when repeatable appears
+BETTER_ITEM_REGION = (0, 0, 0, 0)           # not used in code
 
-# --- Tap targets (x, y) — fill after running --calibrate ---
-CLAIM_BTN           = (0, 0)
-CLAIMED_X_BTN       = (0, 0)   # X button on the "Claimed!" reward popup
-TOP_CENTER_DISMISS  = (360, 50) # tap to close better-item popup
+# --- Tap targets (x, y) ---
+CLAIM_BTN           = (820, 1102)
+CLAIMED_X_BTN       = (540, 1860)  # X button on the "Claimed!" reward popup
+TOP_CENTER_DISMISS  = (540, 50)    # tap to close better-item popup
 
 NAV = {
-    "pet_gacha":      (0, 0),
-    "cookie_gacha":   (0, 0),
-    "inventory":      (0, 0),
-    "oven":           (0, 0),
-    "back":           (0, 0),
-    "pull_x10":       (0, 0),
-    "use_chest_btn":  (0, 0),   # "Use" button in chest dialog
-    "start_bake_btn": (0, 0),   # "Start" on Auto Bake screen
+    "gacha_nav":     (980, 1835),   # Gacha icon in bottom nav bar
+    "pet_gacha":     (810, 1637),   # "► Pet Gacha ◄" tab
+    "cookie_gacha":  (270, 1637),   # "► Cookie Gacha ◄" tab
+    "inventory":     (0, 0),        # TODO: find the inventory nav button on main screen
+    "oven":          (55, 500),     # cart/oven icon on left side of game screen
+    "back":          (540, 1860),   # X button to close any panel
+    "pull_x10":      (365, 1550),   # x10 pull button on gacha screen
+    "use_chest_btn": (540, 740),    # "Use" button in chest dialog
+    "start_bake_btn":(500, 1630),   # "Start" button on Auto Bake screen
 }
 
 # --- Tesseract ---

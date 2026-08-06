@@ -4,6 +4,5 @@ __pycache__/
 .env
 calibration.png
 unknown_quests.log
-templates/equip_button.png
-templates/start_bake_btn.png
+# templates committed — cropped from user's game screenshots at 1080x1920
 .superpowers/

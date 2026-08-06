@@ -53,7 +53,9 @@ def claim_quest(adb: ADB) -> None:
 
 
 def pull_pet_gacha(adb: ADB) -> None:
-    adb.tap(*config.NAV["pet_gacha"])
+    adb.tap(*config.NAV["gacha_nav"])    # open gacha screen from main
+    adb.sleep(config.NAV_WAIT)
+    adb.tap(*config.NAV["pet_gacha"])    # switch to Pet Gacha tab
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
     adb.sleep(config.NAV_WAIT)
@@ -62,7 +64,9 @@ def pull_pet_gacha(adb: ADB) -> None:
 
 
 def pull_cookie_gacha(adb: ADB) -> None:
-    adb.tap(*config.NAV["cookie_gacha"])
+    adb.tap(*config.NAV["gacha_nav"])    # open gacha screen from main
+    adb.sleep(config.NAV_WAIT)
+    adb.tap(*config.NAV["cookie_gacha"]) # switch to Cookie Gacha tab
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
     adb.sleep(config.NAV_WAIT)
