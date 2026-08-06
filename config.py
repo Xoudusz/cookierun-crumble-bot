@@ -25,7 +25,7 @@ TEMPLATE_THRESHOLD = 0.95
 
 # --- Regions (x, y, w, h) ---
 QUEST_CARD_REGION  = (575, 1048, 490, 107)
-QUEST_TEXT_REGION  = (660, 1053, 400, 100)
+QUEST_TEXT_REGION  = (600, 1048, 470, 107)
 REPEATABLE_REGION  = (575, 1048, 490, 107)  # same spot as quest card; verify when repeatable appears
 BETTER_ITEM_REGION = (0, 0, 0, 0)           # not used in code
 

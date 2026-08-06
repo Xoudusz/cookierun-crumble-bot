@@ -16,21 +16,20 @@ _unknown_log = open("unknown_quests.log", "a", buffering=1)
 def ocr_quest_text(img: np.ndarray) -> str:
     x, y, w, h = config.QUEST_TEXT_REGION
     crop = img[y:y+h, x:x+w]
-    # upscale 2x — Tesseract accuracy improves significantly on larger text
-    crop = cv2.resize(crop, (w * 2, h * 2), interpolation=cv2.INTER_CUBIC)
+    # upscale 3x — more pixels = better Tesseract accuracy on small game text
+    crop = cv2.resize(crop, (w * 3, h * 3), interpolation=cv2.INTER_CUBIC)
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    pil = Image.fromarray(thresh)
+    pil = Image.fromarray(gray)
     text = pytesseract.image_to_string(pil, config="--psm 6")
     return text.strip().lower()
 
 
 def dispatch_quest(text: str) -> str:
     t = text.lower()
-    if "gacha" in t and "pet" in t:
-        return "pull_pet_gacha"
-    if "gacha" in t and ("cookie" in t or "character" in t):
-        return "pull_cookie_gacha"
+    if "gacha" in t:
+        if "cookie" in t or "char" in t:
+            return "pull_cookie_gacha"
+        return "pull_pet_gacha"  # "pet" often misread; default to pet if not cookie
     if "chest" in t or "inventory" in t:
         return "use_chest"
     if "oven" in t or "bake" in t or "furnace" in t or "gear" in t:
