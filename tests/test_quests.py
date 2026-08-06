@@ -54,37 +54,35 @@ def test_claim_quest_taps_claim_then_dismisses():
 def test_pull_pet_gacha_navigates_and_pulls():
     adb = _mock_adb()
     config.NAV = {
-        "gacha_nav": (999, 999),
-        "pet_gacha": (100, 200),
+        "quest_tap": (820, 1101),
         "pull_x10":  (300, 600),
         "back":      (50, 50),
     }
     config.NAV_WAIT = 0
     pull_pet_gacha(adb)
     taps = [c.args for c in adb.tap.call_args_list]
-    assert (100, 200) in taps  # navigated to pet gacha
-    assert (300, 600) in taps  # tapped x10 pull
+    assert (820, 1101) in taps  # tapped quest shortcut
+    assert (300, 600) in taps   # tapped x10 pull
 
 
 def test_pull_cookie_gacha_navigates_and_pulls():
     adb = _mock_adb()
     config.NAV = {
-        "gacha_nav":    (999, 999),
-        "cookie_gacha": (150, 200),
-        "pull_x10":     (300, 600),
-        "back":         (50, 50),
+        "quest_tap": (820, 1101),
+        "pull_x10":  (300, 600),
+        "back":      (50, 50),
     }
     config.NAV_WAIT = 0
     pull_cookie_gacha(adb)
     taps = [c.args for c in adb.tap.call_args_list]
-    assert (150, 200) in taps
+    assert (820, 1101) in taps
     assert (300, 600) in taps
 
 
 def test_use_chest_navigates_and_uses():
     adb = _mock_adb()
     config.NAV = {
-        "inventory":     (200, 900),
+        "quest_tap":     (820, 1101),
         "select_chest":  (200, 1150),
         "use_chest_btn": (550, 850),
         "back":          (50, 50),
@@ -92,7 +90,7 @@ def test_use_chest_navigates_and_uses():
     config.NAV_WAIT = 0
     use_chest(adb)
     taps = [c.args for c in adb.tap.call_args_list]
-    assert (200, 900) in taps
+    assert (820, 1101) in taps
     assert (200, 1150) in taps
     assert (550, 850) in taps
 

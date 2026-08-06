@@ -56,9 +56,7 @@ def claim_quest(adb: ADB) -> None:
 
 
 def pull_pet_gacha(adb: ADB) -> None:
-    adb.tap(*config.NAV["gacha_nav"])    # open gacha screen from main
-    adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["pet_gacha"])    # switch to Pet Gacha tab
+    adb.tap(*config.NAV["quest_tap"])   # quest shortcut opens pet gacha directly
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
     adb.sleep(config.NAV_WAIT)
@@ -67,9 +65,7 @@ def pull_pet_gacha(adb: ADB) -> None:
 
 
 def pull_cookie_gacha(adb: ADB) -> None:
-    adb.tap(*config.NAV["gacha_nav"])    # open gacha screen from main
-    adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["cookie_gacha"]) # switch to Cookie Gacha tab
+    adb.tap(*config.NAV["quest_tap"])   # quest shortcut opens cookie gacha directly
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
     adb.sleep(config.NAV_WAIT)
@@ -78,7 +74,7 @@ def pull_cookie_gacha(adb: ADB) -> None:
 
 
 def use_chest(adb: ADB) -> None:
-    adb.tap(*config.NAV["inventory"])
+    adb.tap(*config.NAV["quest_tap"])
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["select_chest"])
     adb.sleep(config.NAV_WAIT)

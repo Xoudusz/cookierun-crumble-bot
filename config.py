@@ -35,10 +35,7 @@ CLAIMED_X_BTN       = (540, 1860)  # X button on the "Claimed!" reward popup
 TOP_CENTER_DISMISS  = (540, 50)    # tap to close better-item popup
 
 NAV = {
-    "gacha_nav":     (980, 1835),   # Gacha icon in bottom nav bar
-    "pet_gacha":     (810, 1637),   # "► Pet Gacha ◄" tab
-    "cookie_gacha":  (270, 1637),   # "► Cookie Gacha ◄" tab
-    "inventory":     (820, 1101),   # tap quest card — shortcut navigates to relevant screen
+    "quest_tap":     (820, 1101),   # tap quest card — universal shortcut to relevant screen
     "select_chest":  (200, 1150),   # tap chest item to select it
     "use_chest_btn": (550, 850),    # "Use" button in popup after selecting chest
     "oven":          (380, 1720),   # oven button on main screen
