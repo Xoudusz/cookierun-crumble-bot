@@ -52,3 +52,19 @@ def test_tap_sends_correct_command():
             ["adb", "-s", "127.0.0.1:7555", "shell", "input", "tap", "100", "200"],
             capture_output=True,
         )
+
+
+def test_screenshot_raises_on_adb_failure():
+    with patch("subprocess.run") as mock_run:
+        mock_run.return_value = MagicMock(returncode=1, stdout=b"")
+        adb = ADB("127.0.0.1", 7555)
+        with pytest.raises(RuntimeError, match="Screenshot failed: returncode 1"):
+            adb.screenshot()
+
+
+def test_tap_raises_on_adb_failure():
+    with patch("subprocess.run") as mock_run:
+        mock_run.return_value = MagicMock(returncode=1)
+        adb = ADB("127.0.0.1", 7555)
+        with pytest.raises(RuntimeError, match="Tap failed: returncode 1"):
+            adb.tap(100, 200)

@@ -1,9 +1,7 @@
 import subprocess
 import time
-import io
 import numpy as np
 import cv2
-from PIL import Image
 
 
 class ADB:
@@ -29,16 +27,20 @@ class ADB:
             ["adb", "-s", self._device, "exec-out", "screencap", "-p"],
             capture_output=True,
         )
+        if result.returncode != 0:
+            raise RuntimeError(f"Screenshot failed: returncode {result.returncode}")
         img = cv2.imdecode(np.frombuffer(result.stdout, np.uint8), cv2.IMREAD_COLOR)
         if img is None:
             raise RuntimeError("Screenshot returned empty image")
         return img
 
     def tap(self, x: int, y: int) -> None:
-        subprocess.run(
+        result = subprocess.run(
             ["adb", "-s", self._device, "shell", "input", "tap", str(x), str(y)],
             capture_output=True,
         )
+        if result.returncode != 0:
+            raise RuntimeError(f"Tap failed: returncode {result.returncode}")
 
     def sleep(self, seconds: float) -> None:
         time.sleep(seconds)
