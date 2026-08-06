@@ -56,20 +56,24 @@ def claim_quest(adb: ADB) -> None:
 
 
 def pull_pet_gacha(adb: ADB) -> None:
-    adb.tap(*config.NAV["quest_tap"])   # quest shortcut opens pet gacha directly
+    adb.tap(*config.NAV["quest_tap"])
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
     adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["back"])
+    adb.tap(*config.NAV["back"])        # cancel animation
+    adb.sleep(config.NAV_WAIT)
+    adb.tap(*config.NAV["back"])        # close gacha screen
     adb.sleep(config.NAV_WAIT)
 
 
 def pull_cookie_gacha(adb: ADB) -> None:
-    adb.tap(*config.NAV["quest_tap"])   # quest shortcut opens cookie gacha directly
+    adb.tap(*config.NAV["quest_tap"])
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
     adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["back"])
+    adb.tap(*config.NAV["back"])        # cancel animation
+    adb.sleep(config.NAV_WAIT)
+    adb.tap(*config.NAV["back"])        # close gacha screen
     adb.sleep(config.NAV_WAIT)
 
 
