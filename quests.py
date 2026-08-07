@@ -122,6 +122,10 @@ def bake_oven(adb: ADB) -> None:
         adb.tap(*config.NAV["oven"])
         adb.sleep(config.POPUP_FADE_WAIT)
         img = adb.screenshot()
+        px = img[700, 360]
+        hsv_px = cv2.cvtColor(img[698:702, 358:362], cv2.COLOR_BGR2HSV)
+        logger.info("AUTO BTN pixel BGR=%s HSV=%s", px, hsv_px[1,1])
+        cv2.imwrite("/tmp/bake_oven_screen.png", img[650:750, 310:410])
         if is_grey(img, config.BAKE_AUTO_BTN_REGION, s_max=100):
             # Auto button is grey = OFF — start bake
             for _ in range(3):
