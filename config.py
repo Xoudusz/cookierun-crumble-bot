@@ -21,7 +21,7 @@ YELLOW_H_LO = 8    # expanded to catch orange (claimable quest glow)
 YELLOW_H_HI = 35
 YELLOW_S_MIN = 160  # raised from 140 — filters less-saturated ambient UI orange
 YELLOW_V_MIN = 140
-YELLOW_RATIO = 0.25  # raised from 0.15 — claimable glow covers large area, ambient UI orange doesn't
+YELLOW_RATIO = 0.20  # claimable glow covers large area; raised from 0.15 to reduce false positives on orangy stages
 
 # --- Template confidence ---
 TEMPLATE_THRESHOLD = 0.95

@@ -137,7 +137,7 @@ def bake_oven(adb: ADB) -> None:
             logger.info("Better item popup during bake — dismissing")
             adb.tap(*config.TOP_CENTER_DISMISS)
             adb.sleep(config.BETTER_ITEM_WAIT)
-            deadline = time.time() + config.BAKE_POLL_TIMEOUT
+            deadline = time.time() + config.BAKE_POLL_TIMEOUT  # reset after sleep, not before
             continue
         if is_yellow(img, config.QUEST_CARD_REGION) or is_yellow(img, config.REPEATABLE_REGION):
             claim_quest(adb)
@@ -147,6 +147,9 @@ def bake_oven(adb: ADB) -> None:
             adb.sleep(config.NAV_WAIT)
             _baking = False
             break
+    else:
+        # Timed out — game may have cancelled bake (e.g. after better-item transition)
+        _baking = False
 
 
 HANDLERS = {
