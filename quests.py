@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import cv2
 import numpy as np
 import pytesseract
@@ -25,7 +26,7 @@ def ocr_quest_text(img: np.ndarray) -> str:
 
 
 def dispatch_quest(text: str) -> str:
-    t = text.lower()
+    t = re.sub(r'\d+\s*/\s*\d+', '', text.lower())  # strip "N/M" progress counters
     if "gacha" in t:
         if "cookie" in t or "char" in t:
             return "pull_cookie_gacha"
