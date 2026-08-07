@@ -67,6 +67,8 @@ def run_loop(adb: ADB) -> None:
     logger.info("Bot starting — press Ctrl+C to stop")
     while True:
         try:
+            adb.tap(*config.NAV["back"])  # safety: return to main screen if lost
+            adb.sleep(config.NAV_WAIT)
             img = adb.screenshot()
 
             if check_global_interrupts(img, adb):
