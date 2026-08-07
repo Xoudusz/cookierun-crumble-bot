@@ -59,7 +59,9 @@ def pull_gacha(adb: ADB) -> None:
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["back"])           # cancel animation
     adb.sleep(config.GACHA_RESULT_WAIT)    # wait for results cards to flip in
-    adb.tap(*config.NAV["back"])           # close results/gacha screen
+    adb.tap(*config.NAV["back"])           # close results screen
+    adb.sleep(config.NAV_WAIT + 0.1)       # extra 0.1s before closing gacha
+    adb.tap(*config.NAV["back"])           # close gacha screen
     adb.sleep(config.NAV_WAIT)
 
 
