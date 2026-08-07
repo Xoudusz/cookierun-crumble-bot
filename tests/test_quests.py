@@ -95,7 +95,6 @@ def test_bake_oven_taps_oven_then_start():
     import quests
     quests._baking = False  # reset flag before test
     adb = _mock_adb()
-    adb.screenshot = MagicMock(return_value=np.zeros((1920, 1080, 3), dtype=np.uint8))
     config.NAV = {
         "oven":           (380, 1720),
         "start_bake_btn": (500, 1700),
@@ -106,13 +105,11 @@ def test_bake_oven_taps_oven_then_start():
     config.POPUP_FADE_WAIT = 0
     config.BAKE_POLL_INTERVAL = 0
     config.BAKE_POLL_TIMEOUT = 0
-    config.BAKE_AUTO_BTN_REGION = (0, 0, 10, 10)
     config.QUEST_CARD_REGION = (0, 0, 10, 10)
     config.REPEATABLE_REGION = (0, 0, 10, 10)
     config.CLAIM_BTN = (820, 1102)
     config.CLAIM_WAIT = 0
-    # is_grey returns True (OFF state) so start taps fire; is_yellow returns False (no orange to claim)
-    with patch("quests.is_grey", return_value=True), patch("quests.is_yellow", return_value=False):
+    with patch("quests.is_yellow", return_value=False):
         bake_oven(adb)
     taps = [c.args for c in adb.tap.call_args_list]
     assert (380, 1720) in taps
