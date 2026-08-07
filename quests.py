@@ -119,16 +119,18 @@ _baking = False
 def bake_oven(adb: ADB) -> None:
     global _baking
     if not _baking:
+        adb.tap(*config.NAV["oven"])
+        adb.sleep(config.POPUP_FADE_WAIT)
         img = adb.screenshot()
         if is_grey(img, config.BAKE_AUTO_BTN_REGION, s_max=100):
             # Auto button is grey = OFF — start bake
-            adb.tap(*config.NAV["oven"])
-            adb.sleep(config.POPUP_FADE_WAIT)
             for _ in range(3):
                 adb.tap(*config.NAV["start_bake_btn"])
                 adb.sleep(config.POPUP_FADE_WAIT)
         else:
-            logger.info("Auto bake already ON — skipping start taps")
+            logger.info("Auto bake already ON — closing oven screen")
+            adb.tap(*config.NAV["back"])
+            adb.sleep(config.NAV_WAIT)
         _baking = True
 
     # Poll until claimable; timeout lets main loop clear unexpected popups
