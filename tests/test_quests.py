@@ -103,13 +103,17 @@ def test_bake_oven_taps_oven_then_start():
         "quest_tap":      (820, 1101),
     }
     config.NAV_WAIT = 0
+    config.POPUP_FADE_WAIT = 0
     config.BAKE_POLL_INTERVAL = 0
-    config.BAKE_POLL_TIMEOUT = 0  # expire immediately so poll loop exits without hanging
+    config.BAKE_POLL_TIMEOUT = 0
+    config.BAKE_BTN_REGION = (0, 0, 10, 10)
     config.QUEST_CARD_REGION = (0, 0, 10, 10)
     config.REPEATABLE_REGION = (0, 0, 10, 10)
     config.CLAIM_BTN = (820, 1102)
     config.CLAIM_WAIT = 0
-    bake_oven(adb)
+    # first is_yellow call (BAKE_BTN_REGION) returns True so start taps fire
+    with patch("quests.is_yellow", side_effect=[True, False]):
+        bake_oven(adb)
     taps = [c.args for c in adb.tap.call_args_list]
     assert (380, 1720) in taps
     assert (500, 1700) in taps
