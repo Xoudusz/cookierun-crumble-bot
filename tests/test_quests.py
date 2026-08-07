@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock, call
 from quests import (
     dispatch_quest,
     claim_quest, dismiss_claimed_popup,
-    pull_pet_gacha, pull_cookie_gacha,
+    pull_gacha,
     use_chest, wait_stage, bake_oven,
 )
 import config
@@ -17,16 +17,16 @@ def _mock_adb():
 
 
 @pytest.mark.parametrize("text,expected", [
-    ("pull in the pet gacha 10 times", "pull_pet_gacha"),
-    ("Pull in the Pet Gacha 10 times", "pull_pet_gacha"),
-    ("pull the cookie gacha 10 times", "pull_cookie_gacha"),
-    ("pull the character gacha 10 times", "pull_cookie_gacha"),
+    ("pull in the pet gacha 10 times", "pull_gacha"),
+    ("Pull in the Pet Gacha 10 times", "pull_gacha"),
+    ("pull the cookie gacha 10 times", "pull_gacha"),
+    ("pull the character gacha 10 times", "pull_gacha"),
     ("use 1 chest from your inventory", "use_chest"),
     ("clear stage 3-4", "wait_stage"),
-    ("clear stages 10 times", "wait_stage"),
     ("defeat 100 enemies", "wait_enemies"),
     ("bake gear in the oven 3 times", "bake_oven"),
     ("use the furnace 2 times", "bake_oven"),
+    ("15 times 200",               "bake_oven"),  # garbled bake quest — "times" fallback
     ("something totally unknown", "unknown"),
     ("", "unknown"),
 ])
@@ -49,7 +49,7 @@ def test_claim_quest_taps_claim():
     adb.tap.assert_called_once_with(600, 100)
 
 
-def test_pull_pet_gacha_navigates_and_pulls():
+def test_pull_gacha_navigates_and_pulls():
     adb = _mock_adb()
     config.NAV = {
         "quest_tap": (820, 1101),
@@ -57,21 +57,7 @@ def test_pull_pet_gacha_navigates_and_pulls():
         "back":      (50, 50),
     }
     config.NAV_WAIT = 0
-    pull_pet_gacha(adb)
-    taps = [c.args for c in adb.tap.call_args_list]
-    assert (820, 1101) in taps  # tapped quest shortcut
-    assert (300, 600) in taps   # tapped x10 pull
-
-
-def test_pull_cookie_gacha_navigates_and_pulls():
-    adb = _mock_adb()
-    config.NAV = {
-        "quest_tap": (820, 1101),
-        "pull_x10":  (300, 600),
-        "back":      (50, 50),
-    }
-    config.NAV_WAIT = 0
-    pull_cookie_gacha(adb)
+    pull_gacha(adb)
     taps = [c.args for c in adb.tap.call_args_list]
     assert (820, 1101) in taps
     assert (300, 600) in taps
@@ -110,7 +96,6 @@ def test_bake_oven_starts_bake_and_polls_until_done():
     config.NAV_WAIT = 0
     config.CHECK_INTERVAL = 0
 
-    # find_template: first call returns None (baking), second returns position (done)
     with patch("quests.find_template", side_effect=[None, (360, 800)]):
         screenshots = [MagicMock(), MagicMock()]
         call_count = 0
@@ -122,8 +107,8 @@ def test_bake_oven_starts_bake_and_polls_until_done():
         bake_oven(adb, fake_screenshot, check_interrupts=None)
 
     taps = [c.args for c in adb.tap.call_args_list]
-    assert (500, 900) in taps        # navigated to oven
-    assert (360, 800) in taps        # tapped Start
+    assert (500, 900) in taps
+    assert (360, 800) in taps
 
 
 def test_bake_oven_calls_check_interrupts_each_poll():

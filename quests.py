@@ -29,8 +29,8 @@ def dispatch_quest(text: str) -> str:
     t = re.sub(r'\d+\s*/\s*\d+', '', text.lower())  # strip "N/M" progress counters
     if "gacha" in t:
         if "cookie" in t or "char" in t:
-            return "pull_cookie_gacha"
-        return "pull_pet_gacha"  # "pet" often misread; default to pet if not cookie
+            return "pull_gacha"
+        return "pull_gacha"
     if "chest" in t or "inventory" in t:
         return "use_chest"
     if "oven" in t or "bake" in t or "furnace" in t or "gear" in t:
@@ -39,6 +39,8 @@ def dispatch_quest(text: str) -> str:
         return "wait_enemies"
     if "stage" in t or "clear" in t:
         return "wait_stage"
+    if "times" in t:
+        return "bake_oven"  # bake quest keywords garbled by icon; "times" is reliable
     _unknown_log.write(f"{text}\n")
     logger.warning("Unknown quest: %r", text)
     return "unknown"
@@ -55,18 +57,7 @@ def claim_quest(adb: ADB) -> None:
     adb.sleep(config.CLAIM_WAIT)
 
 
-def pull_pet_gacha(adb: ADB) -> None:
-    adb.tap(*config.NAV["quest_tap"])
-    adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["pull_x10"])
-    adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["back"])        # cancel animation
-    adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["back"])        # close gacha screen
-    adb.sleep(config.NAV_WAIT)
-
-
-def pull_cookie_gacha(adb: ADB) -> None:
+def pull_gacha(adb: ADB) -> None:
     adb.tap(*config.NAV["quest_tap"])
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
@@ -119,10 +110,9 @@ def bake_oven(adb: ADB, get_screenshot, check_interrupts=None) -> None:
 
 
 HANDLERS = {
-    "pull_pet_gacha":  pull_pet_gacha,
-    "pull_cookie_gacha": pull_cookie_gacha,
-    "use_chest":       use_chest,
-    "wait_stage":      wait_stage,
-    "wait_enemies":    wait_enemies,
-    "bake_oven":       bake_oven,
+    "pull_gacha":    pull_gacha,
+    "use_chest":     use_chest,
+    "wait_stage":    wait_stage,
+    "wait_enemies":  wait_enemies,
+    "bake_oven":     bake_oven,
 }
