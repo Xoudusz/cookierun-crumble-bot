@@ -96,6 +96,8 @@ def run_loop(adb: ADB) -> None:
 
             if quest_type in HANDLERS:
                 HANDLERS[quest_type](adb)
+                if quest_type in {"pull_gacha", "use_chest", "bake_oven"}:
+                    continue  # handler already navigated back — no extra sleep needed
 
             time.sleep(config.CHECK_INTERVAL)
 
