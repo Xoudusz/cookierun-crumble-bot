@@ -10,6 +10,7 @@ POPUP_FADE_WAIT     = 0.5   # seconds after dismissing chest reward popup (0.4s 
 GACHA_RESULT_WAIT   = 0.8   # seconds after first back to cancel gacha anim (0.7s flip + 0.1)
 BETTER_ITEM_WAIT    = 30    # seconds to wait after dismissing better-item popup (game transitions)
 BAKE_WAIT           = 15    # seconds for auto-bake to complete all 15 bakes (~0.9s each)
+BAKE_POLL_INTERVAL  = 2     # seconds between orange checks during auto-bake
 
 # --- Screen ---
 SCREEN_W = 1080

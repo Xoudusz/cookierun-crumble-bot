@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 import warnings
 
 warnings.filterwarnings("ignore", message=r".*pin_memory.*")
@@ -12,6 +13,7 @@ import numpy as np
 
 import config
 from adb import ADB
+from detector import is_yellow
 
 _reader = None
 
@@ -111,7 +113,17 @@ def bake_oven(adb: ADB) -> None:
     adb.tap(*config.NAV["oven"])
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["start_bake_btn"])
-    adb.sleep(config.BAKE_WAIT)            # wait for auto-bake to finish before next back tap
+    # Poll while baking — no back tap (would cancel bake), but check orange every 2s
+    deadline = time.time() + config.BAKE_WAIT
+    while time.time() < deadline:
+        adb.sleep(config.BAKE_POLL_INTERVAL)
+        img = adb.screenshot()
+        if is_yellow(img, config.QUEST_CARD_REGION) or is_yellow(img, config.REPEATABLE_REGION):
+            claim_quest(adb)
+            adb.tap(*config.NAV["back"])
+            adb.sleep(config.NAV_WAIT)
+            adb.tap(*config.NAV["quest_tap"])
+            adb.sleep(config.NAV_WAIT)
 
 
 HANDLERS = {
