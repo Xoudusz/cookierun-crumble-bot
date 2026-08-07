@@ -35,7 +35,7 @@ def check_global_interrupts(img: np.ndarray, adb: ADB) -> bool:
 
     # 2. Repeatable quest overlay
     if is_yellow(img, config.REPEATABLE_REGION):
-        logger.info("Repeatable quest claimable — claiming")
+        logger.info("Quest claimable — claiming")
         claim_quest(adb)
         return True
 
