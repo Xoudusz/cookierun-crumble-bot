@@ -53,7 +53,6 @@ def claim_quest(adb: ADB) -> None:
     x, y = config.CLAIM_BTN
     adb.tap(x, y)
     adb.sleep(config.CLAIM_WAIT)
-    dismiss_claimed_popup(adb)
 
 
 def pull_pet_gacha(adb: ADB) -> None:
