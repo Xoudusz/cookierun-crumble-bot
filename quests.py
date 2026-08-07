@@ -127,6 +127,7 @@ def bake_oven(adb: ADB) -> None:
             adb.sleep(config.NAV_WAIT)
             adb.tap(*config.NAV["quest_tap"])
             adb.sleep(config.NAV_WAIT)
+            break
 
 
 HANDLERS = {
