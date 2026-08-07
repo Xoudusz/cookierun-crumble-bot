@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 import warnings
 
 warnings.filterwarnings("ignore", message=r".*pin_memory.*")
@@ -108,15 +109,23 @@ def wait_enemies(adb: ADB) -> None:
     pass
 
 
+_baking = False
+
+
 def bake_oven(adb: ADB) -> None:
-    adb.tap(*config.NAV["oven"])
-    adb.sleep(config.NAV_WAIT)
-    # Tap orange button 3× — dismisses start + up to 2 organize-gear overlays, all at same coords
-    for _ in range(3):
-        adb.tap(*config.NAV["start_bake_btn"])
+    global _baking
+    if not _baking:
+        adb.tap(*config.NAV["oven"])
         adb.sleep(config.NAV_WAIT)
-    # Poll until claimable — staying here prevents main loop's back tap from cancelling bake
-    while True:
+        # Tap orange button 3× — dismisses start + up to 2 organize-gear overlays
+        for _ in range(3):
+            adb.tap(*config.NAV["start_bake_btn"])
+            adb.sleep(config.NAV_WAIT)
+        _baking = True
+
+    # Poll until claimable; timeout lets main loop clear any popup blocking the region
+    deadline = time.time() + config.BAKE_POLL_TIMEOUT
+    while time.time() < deadline:
         adb.sleep(config.BAKE_POLL_INTERVAL)
         img = adb.screenshot()
         if is_yellow(img, config.QUEST_CARD_REGION) or is_yellow(img, config.REPEATABLE_REGION):
@@ -125,6 +134,7 @@ def bake_oven(adb: ADB) -> None:
             adb.sleep(config.NAV_WAIT)
             adb.tap(*config.NAV["quest_tap"])
             adb.sleep(config.NAV_WAIT)
+            _baking = False
             break
 
 
