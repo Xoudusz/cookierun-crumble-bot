@@ -120,12 +120,15 @@ def bake_oven(adb: ADB) -> None:
     global _baking
     if not _baking:
         adb.tap(*config.NAV["oven"])
-        adb.sleep(config.NAV_WAIT)
-        # Tap orange button 3× — dismisses start + up to 2 organize-gear overlays
-        # Each overlay needs time to appear before next tap — use POPUP_FADE_WAIT not NAV_WAIT
-        for _ in range(3):
-            adb.tap(*config.NAV["start_bake_btn"])
-            adb.sleep(config.POPUP_FADE_WAIT)
+        adb.sleep(config.POPUP_FADE_WAIT)  # wait for panel to open
+        img = adb.screenshot()
+        if is_yellow(img, config.BAKE_BTN_REGION):
+            # Start button visible — not yet baking, tap 3× to handle start + organize overlays
+            for _ in range(3):
+                adb.tap(*config.NAV["start_bake_btn"])
+                adb.sleep(config.POPUP_FADE_WAIT)
+        else:
+            logger.info("Auto bake already running — skipping start taps")
         _baking = True
 
     # Poll until claimable; timeout lets main loop clear unexpected popups
