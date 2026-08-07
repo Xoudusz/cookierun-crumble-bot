@@ -83,6 +83,9 @@ def run_loop(adb: ADB) -> None:
             quest_type = dispatch_quest(text)
             logger.info("Quest: %r -> %s", text, quest_type)
 
+            if quest_type == "unknown":
+                continue  # retry immediately — don't waste CHECK_INTERVAL on bad OCR read
+
             if quest_type in HANDLERS:
                 HANDLERS[quest_type](adb)
 
