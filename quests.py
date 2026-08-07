@@ -122,9 +122,10 @@ def bake_oven(adb: ADB) -> None:
         adb.tap(*config.NAV["oven"])
         adb.sleep(config.NAV_WAIT)
         # Tap orange button 3× — dismisses start + up to 2 organize-gear overlays
+        # Each overlay needs time to appear before next tap — use POPUP_FADE_WAIT not NAV_WAIT
         for _ in range(3):
             adb.tap(*config.NAV["start_bake_btn"])
-            adb.sleep(config.NAV_WAIT)
+            adb.sleep(config.POPUP_FADE_WAIT)
         _baking = True
 
     # Poll until claimable; timeout lets main loop clear unexpected popups
