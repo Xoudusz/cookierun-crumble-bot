@@ -2,12 +2,18 @@ import logging
 import re
 import cv2
 import numpy as np
-import easyocr
 
 import config
 from adb import ADB
 
-_reader = easyocr.Reader(['en'], gpu=False)
+_reader = None
+
+def _get_reader():
+    global _reader
+    if _reader is None:
+        import easyocr
+        _reader = easyocr.Reader(['en'], gpu=False)
+    return _reader
 
 logger = logging.getLogger(__name__)
 _unknown_log = open("unknown_quests.log", "a", buffering=1)
@@ -16,7 +22,7 @@ _unknown_log = open("unknown_quests.log", "a", buffering=1)
 def ocr_quest_text(img: np.ndarray) -> str:
     x, y, w, h = config.QUEST_TEXT_REGION
     crop = img[y:y+h, x:x+w]
-    results = _reader.readtext(crop, detail=0, paragraph=True)
+    results = _get_reader().readtext(crop, detail=0, paragraph=True)
     return " ".join(results).strip().lower()
 
 
