@@ -133,13 +133,11 @@ def bake_oven(adb: ADB) -> None:
     while time.time() < deadline:
         adb.sleep(config.BAKE_POLL_INTERVAL)
         img = adb.screenshot()
-        # Handle better-item popup inline — reset deadline so it doesn't eat bake time
+        # Better-item popup — hand off to main loop which handles it correctly
         if os.path.exists(_EQUIP_BTN_TEMPLATE) and find_template(img, _EQUIP_BTN_TEMPLATE) is not None:
-            logger.info("Better item popup during bake — dismissing")
-            adb.tap(*config.TOP_CENTER_DISMISS)
-            adb.sleep(config.BETTER_ITEM_WAIT)
-            deadline = time.time() + config.BAKE_POLL_TIMEOUT  # reset after sleep, not before
-            continue
+            logger.info("Better item popup during bake — handing to main loop")
+            _baking = False
+            break
         if is_yellow(img, config.QUEST_CARD_REGION) or is_yellow(img, config.REPEATABLE_REGION):
             claim_quest(adb)
             adb.tap(*config.NAV["back"])
