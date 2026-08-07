@@ -120,7 +120,7 @@ def bake_oven(adb: ADB) -> None:
     global _baking
     if not _baking:
         img = adb.screenshot()
-        if is_grey(img, config.BAKE_AUTO_BTN_REGION):
+        if is_grey(img, config.BAKE_AUTO_BTN_REGION, s_max=100):
             # Auto button is grey = OFF — start bake
             adb.tap(*config.NAV["oven"])
             adb.sleep(config.POPUP_FADE_WAIT)

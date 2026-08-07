@@ -106,7 +106,7 @@ def test_bake_oven_taps_oven_then_start():
     config.POPUP_FADE_WAIT = 0
     config.BAKE_POLL_INTERVAL = 0
     config.BAKE_POLL_TIMEOUT = 0
-    config.BAKE_BTN_REGION = (0, 0, 10, 10)
+    config.BAKE_AUTO_BTN_REGION = (0, 0, 10, 10)
     config.QUEST_CARD_REGION = (0, 0, 10, 10)
     config.REPEATABLE_REGION = (0, 0, 10, 10)
     config.CLAIM_BTN = (820, 1102)
