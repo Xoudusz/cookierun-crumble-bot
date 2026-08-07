@@ -1,6 +1,5 @@
 import logging
 import re
-import time
 import warnings
 
 warnings.filterwarnings("ignore", message=r".*pin_memory.*")
@@ -116,9 +115,8 @@ def bake_oven(adb: ADB) -> None:
     for _ in range(3):
         adb.tap(*config.NAV["start_bake_btn"])
         adb.sleep(config.NAV_WAIT)
-    # Poll while baking — no back tap (would cancel bake), but check orange every 2s
-    deadline = time.time() + config.BAKE_WAIT
-    while time.time() < deadline:
+    # Poll until claimable — staying here prevents main loop's back tap from cancelling bake
+    while True:
         adb.sleep(config.BAKE_POLL_INTERVAL)
         img = adb.screenshot()
         if is_yellow(img, config.QUEST_CARD_REGION) or is_yellow(img, config.REPEATABLE_REGION):

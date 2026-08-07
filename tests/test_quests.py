@@ -1,5 +1,6 @@
+import numpy as np
 import pytest
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock, call, patch
 from quests import (
     dispatch_quest,
     claim_quest, dismiss_claimed_popup,
@@ -92,7 +93,6 @@ def test_wait_stage_does_nothing():
 
 def test_bake_oven_taps_oven_then_start():
     adb = _mock_adb()
-    import numpy as np
     adb.screenshot = MagicMock(return_value=np.zeros((1920, 1080, 3), dtype=np.uint8))
     config.NAV = {
         "oven":           (380, 1720),
@@ -101,9 +101,12 @@ def test_bake_oven_taps_oven_then_start():
         "quest_tap":      (820, 1101),
     }
     config.NAV_WAIT = 0
-    config.BAKE_WAIT = 0
     config.BAKE_POLL_INTERVAL = 0
-    bake_oven(adb)
+    config.QUEST_CARD_REGION = (0, 0, 10, 10)
+    config.REPEATABLE_REGION = (0, 0, 10, 10)
+    # patch is_yellow to return True immediately so the poll loop exits
+    with patch("quests.is_yellow", return_value=True):
+        bake_oven(adb)
     taps = [c.args for c in adb.tap.call_args_list]
     assert (380, 1720) in taps
     assert (500, 1700) in taps
