@@ -83,11 +83,11 @@ def test_use_chest_navigates_and_uses():
     assert (540, 1860) in taps
 
 
-def test_wait_stage_sleeps():
+def test_wait_stage_does_nothing():
     adb = _mock_adb()
-    config.CHECK_INTERVAL = 1
     wait_stage(adb)
-    adb.sleep.assert_called_once_with(1)
+    adb.sleep.assert_not_called()
+    adb.tap.assert_not_called()
 
 
 def test_bake_oven_taps_oven_then_start():

@@ -100,11 +100,11 @@ def use_chest(adb: ADB) -> None:
 
 
 def wait_stage(adb: ADB) -> None:
-    adb.sleep(config.CHECK_INTERVAL)
+    pass
 
 
 def wait_enemies(adb: ADB) -> None:
-    adb.sleep(config.CHECK_INTERVAL)
+    pass
 
 
 def bake_oven(adb: ADB) -> None:
