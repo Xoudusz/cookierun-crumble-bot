@@ -112,7 +112,10 @@ def wait_enemies(adb: ADB) -> None:
 def bake_oven(adb: ADB) -> None:
     adb.tap(*config.NAV["oven"])
     adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["start_bake_btn"])
+    # Tap orange button 3× — dismisses start + up to 2 organize-gear overlays, all at same coords
+    for _ in range(3):
+        adb.tap(*config.NAV["start_bake_btn"])
+        adb.sleep(config.NAV_WAIT)
     # Poll while baking — no back tap (would cancel bake), but check orange every 2s
     deadline = time.time() + config.BAKE_WAIT
     while time.time() < deadline:
