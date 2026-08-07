@@ -1,7 +1,7 @@
 # cookierun-crumble-bot
 
 ## Stack
-Python 3.10+, opencv-python, pytesseract, Pillow, ADB (Android platform tools)
+Python 3.10+, opencv-python, easyocr, Pillow, ADB (Android platform tools)
 
 ## Structure
 - `main.py` — entry point, main loop, `--calibrate` mode

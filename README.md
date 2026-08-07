@@ -7,7 +7,6 @@ Automates daily quest completion in Cookie Run: Crumble via ADB to MuMu Player v
 - Windows 10/11
 - [MuMu Player v6](https://www.mumuplayer.com/) with Cookie Run: Crumble installed
 - [Android Platform Tools](https://developer.android.com/tools/releases/platform-tools) — `adb` must be on PATH
-- [Tesseract-OCR](https://github.com/UB-Mannheim/tesseract/wiki) installed at `C:\Program Files\Tesseract-OCR\tesseract.exe`
 - Python 3.10+
 
 ## Install
@@ -15,6 +14,8 @@ Automates daily quest completion in Cookie Run: Crumble via ADB to MuMu Player v
 ```bash
 pip install -r requirements.txt
 ```
+
+EasyOCR downloads its models on first run (~100 MB).
 
 ## Setup (first run)
 
@@ -25,7 +26,7 @@ pip install -r requirements.txt
    python main.py --calibrate
    ```
 4. Open `calibration.png`, measure coordinates, fill in `config.py`
-5. Crop template images (see calibration output for instructions)
+5. Crop template images into `templates/` (see calibration output for instructions)
 
 ## Run
 
@@ -33,17 +34,23 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Press `Ctrl+C` to stop.
+Press `Ctrl+C` to stop. Unknown quest reads are logged to `unknown_quests.log`.
 
 ## Quest types handled
 
 | Quest | Action |
 |---|---|
-| Clear stage | Wait (auto-completes) |
-| Defeat enemies | Wait (auto-completes) |
-| Pull pet gacha 10× | Navigates to pet gacha, pulls, returns |
-| Pull cookie gacha 10× | Navigates to cookie gacha, pulls, returns |
-| Use 1 chest | Opens inventory, uses chest, returns |
-| Bake gear in oven | Starts Auto Bake, waits for completion, returns |
+| Clear stage | Loop until claimable (auto-completes in game) |
+| Defeat enemies | Loop until claimable (auto-completes in game) |
+| Pull gacha 10× | Navigates via quest tap, pulls x10, closes results, returns |
+| Use 1 chest | Opens inventory via quest tap, uses chest, dismisses popup, returns |
+| Bake gear in oven | Starts Auto Bake, polls for claimable every 2s while baking |
 
-Unknown quest types are logged to `unknown_quests.log`.
+## Loop behaviour
+
+- Runs continuously — each tick: safety back tap → screenshot → orange check → OCR → handler
+- Claimable quests (orange card): claimed immediately, `back + quest_tap` to load next
+- Repeatable quests overlay: detected and claimed as a global interrupt
+- Better-item popup: detected via template match, dismissed, 30s wait for game to settle
+- Unknown OCR reads: retried immediately (no sleep)
+- During bake: orange checked every 2s without interrupting auto-bake
