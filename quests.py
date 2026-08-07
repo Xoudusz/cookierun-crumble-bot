@@ -11,9 +11,13 @@ warnings.filterwarnings("ignore", message=r".*CUDA.*", category=UserWarning)
 import cv2
 import numpy as np
 
+import os
+
 import config
 from adb import ADB
-from detector import is_yellow
+from detector import is_yellow, find_template
+
+_EQUIP_BTN_TEMPLATE = os.path.join("templates", "equip_button.png")
 
 _reader = None
 
@@ -123,11 +127,18 @@ def bake_oven(adb: ADB) -> None:
             adb.sleep(config.NAV_WAIT)
         _baking = True
 
-    # Poll until claimable; timeout lets main loop clear any popup blocking the region
+    # Poll until claimable; timeout lets main loop clear unexpected popups
     deadline = time.time() + config.BAKE_POLL_TIMEOUT
     while time.time() < deadline:
         adb.sleep(config.BAKE_POLL_INTERVAL)
         img = adb.screenshot()
+        # Handle better-item popup inline — reset deadline so it doesn't eat bake time
+        if os.path.exists(_EQUIP_BTN_TEMPLATE) and find_template(img, _EQUIP_BTN_TEMPLATE) is not None:
+            logger.info("Better item popup during bake — dismissing")
+            adb.tap(*config.TOP_CENTER_DISMISS)
+            adb.sleep(config.BETTER_ITEM_WAIT)
+            deadline = time.time() + config.BAKE_POLL_TIMEOUT
+            continue
         if is_yellow(img, config.QUEST_CARD_REGION) or is_yellow(img, config.REPEATABLE_REGION):
             claim_quest(adb)
             adb.tap(*config.NAV["back"])
