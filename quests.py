@@ -2,11 +2,12 @@ import logging
 import re
 import cv2
 import numpy as np
-import pytesseract
-from PIL import Image
+import easyocr
 
 import config
 from adb import ADB
+
+_reader = easyocr.Reader(['en'], gpu=False)
 
 logger = logging.getLogger(__name__)
 _unknown_log = open("unknown_quests.log", "a", buffering=1)
@@ -15,11 +16,8 @@ _unknown_log = open("unknown_quests.log", "a", buffering=1)
 def ocr_quest_text(img: np.ndarray) -> str:
     x, y, w, h = config.QUEST_TEXT_REGION
     crop = img[y:y+h, x:x+w]
-    crop = cv2.resize(crop, (w * 3, h * 3), interpolation=cv2.INTER_CUBIC)
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    pil = Image.fromarray(gray)
-    text = pytesseract.image_to_string(pil, config="--psm 11 --oem 1")
-    return text.strip().lower()
+    results = _reader.readtext(crop, detail=0, paragraph=True)
+    return " ".join(results).strip().lower()
 
 
 def dispatch_quest(text: str) -> str:
