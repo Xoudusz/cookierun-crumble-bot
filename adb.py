@@ -1,7 +1,10 @@
+import random
 import subprocess
 import time
 import numpy as np
 import cv2
+
+_TAP_JITTER = 4   # pixels — uniform random offset applied to every tap
 
 
 class ADB:
@@ -35,12 +38,14 @@ class ADB:
         return img
 
     def tap(self, x: int, y: int) -> None:
+        jx = x + random.randint(-_TAP_JITTER, _TAP_JITTER)
+        jy = y + random.randint(-_TAP_JITTER, _TAP_JITTER)
         result = subprocess.run(
-            ["adb", "-s", self._device, "shell", "input", "tap", str(x), str(y)],
+            ["adb", "-s", self._device, "shell", "input", "tap", str(jx), str(jy)],
             capture_output=True,
         )
         if result.returncode != 0:
             raise RuntimeError(f"Tap failed: returncode {result.returncode}")
 
     def sleep(self, seconds: float) -> None:
-        time.sleep(seconds)
+        time.sleep(seconds * random.uniform(0.9, 1.1))
