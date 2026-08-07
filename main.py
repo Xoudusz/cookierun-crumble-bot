@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import time
 
 import cv2
@@ -7,7 +8,7 @@ import numpy as np
 
 import config
 from adb import ADB
-from detector import is_yellow
+from detector import is_yellow, find_template
 from quests import (
     claim_quest, ocr_quest_text, dispatch_quest,
     HANDLERS,
@@ -19,9 +20,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+_EQUIP_BTN_TEMPLATE = os.path.join("templates", "equip_button.png")
+
+
 def check_global_interrupts(img: np.ndarray, adb: ADB) -> bool:
     """Return True if an interrupt was handled (caller should restart tick)."""
-    # Repeatable quest overlay
+    # 1. Better-item popup (detected by "Equip" button template)
+    if os.path.exists(_EQUIP_BTN_TEMPLATE):
+        if find_template(img, _EQUIP_BTN_TEMPLATE) is not None:
+            logger.info("Better item popup — dismissing")
+            adb.tap(*config.TOP_CENTER_DISMISS)
+            adb.sleep(config.BETTER_ITEM_WAIT)
+            return True
+
+    # 2. Repeatable quest overlay
     if is_yellow(img, config.REPEATABLE_REGION):
         logger.info("Quest claimable — claiming")
         claim_quest(adb)
