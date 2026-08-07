@@ -59,7 +59,7 @@ def test_pull_gacha_navigates_and_pulls():
     taps = [c.args for c in adb.tap.call_args_list]
     assert (820, 1101) in taps
     assert (550, 1550) in taps
-    assert taps.count((540, 1860)) == 2  # cancel anim + close screen
+    assert taps.count((540, 1860)) == 3  # cancel anim + close results + close gacha
 
 
 def test_use_chest_navigates_and_uses():
