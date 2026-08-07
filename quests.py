@@ -15,7 +15,7 @@ import os
 
 import config
 from adb import ADB
-from detector import is_yellow, find_template
+from detector import is_yellow, is_grey, find_template
 
 _EQUIP_BTN_TEMPLATE = os.path.join("templates", "equip_button.png")
 
@@ -119,16 +119,16 @@ _baking = False
 def bake_oven(adb: ADB) -> None:
     global _baking
     if not _baking:
-        adb.tap(*config.NAV["oven"])
-        adb.sleep(config.POPUP_FADE_WAIT)  # wait for panel to open
         img = adb.screenshot()
-        if is_yellow(img, config.BAKE_BTN_REGION):
-            # Start button visible — not yet baking, tap 3× to handle start + organize overlays
+        if is_grey(img, config.BAKE_AUTO_BTN_REGION):
+            # Auto button is grey = OFF — start bake
+            adb.tap(*config.NAV["oven"])
+            adb.sleep(config.POPUP_FADE_WAIT)
             for _ in range(3):
                 adb.tap(*config.NAV["start_bake_btn"])
                 adb.sleep(config.POPUP_FADE_WAIT)
         else:
-            logger.info("Auto bake already running — skipping start taps")
+            logger.info("Auto bake already ON — skipping start taps")
         _baking = True
 
     # Poll until claimable; timeout lets main loop clear unexpected popups

@@ -111,8 +111,8 @@ def test_bake_oven_taps_oven_then_start():
     config.REPEATABLE_REGION = (0, 0, 10, 10)
     config.CLAIM_BTN = (820, 1102)
     config.CLAIM_WAIT = 0
-    # first is_yellow call (BAKE_BTN_REGION) returns True so start taps fire
-    with patch("quests.is_yellow", side_effect=[True, False]):
+    # is_grey returns True (OFF state) so start taps fire; is_yellow returns False (no orange to claim)
+    with patch("quests.is_grey", return_value=True), patch("quests.is_yellow", return_value=False):
         bake_oven(adb)
     taps = [c.args for c in adb.tap.call_args_list]
     assert (380, 1720) in taps

@@ -20,6 +20,22 @@ def is_yellow(
     return bool(ratio >= threshold)
 
 
+def is_grey(
+    img: np.ndarray,
+    region: tuple[int, int, int, int],
+    s_max: int = 60,
+    v_min: int = 60,
+    threshold: float = 0.4,
+) -> bool:
+    x, y, w, h = region
+    crop = img[y:y+h, x:x+w]
+    if crop.size == 0:
+        return False
+    hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv, np.array([0, 0, v_min]), np.array([180, s_max, 255]))
+    return bool(np.count_nonzero(mask) / mask.size >= threshold)
+
+
 def find_template(
     img: np.ndarray,
     template_path: str,
