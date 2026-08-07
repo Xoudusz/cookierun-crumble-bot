@@ -48,10 +48,11 @@ def test_tap_sends_correct_command():
         mock_run.return_value = MagicMock(returncode=0)
         adb = ADB("127.0.0.1", 7555)
         adb.tap(100, 200)
-        mock_run.assert_called_once_with(
-            ["adb", "-s", "127.0.0.1:7555", "shell", "input", "tap", "100", "200"],
-            capture_output=True,
-        )
+        args = mock_run.call_args[0][0]
+        assert args[:5] == ["adb", "-s", "127.0.0.1:7555", "shell", "input"]
+        assert args[5] == "tap"
+        assert abs(int(args[6]) - 100) <= 4   # jitter ±4px
+        assert abs(int(args[7]) - 200) <= 4
 
 
 def test_screenshot_raises_on_adb_failure():
