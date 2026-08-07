@@ -14,11 +14,11 @@ SCREEN_W = 1080
 SCREEN_H = 1920
 
 # --- HSV yellow detection ---
-YELLOW_H_LO = 20
+YELLOW_H_LO = 8    # expanded to catch orange (claimable quest glow)
 YELLOW_H_HI = 35
-YELLOW_S_MIN = 150
-YELLOW_V_MIN = 150
-YELLOW_RATIO = 0.30      # fraction of region pixels that must be yellow
+YELLOW_S_MIN = 140
+YELLOW_V_MIN = 140
+YELLOW_RATIO = 0.15  # orange glow covers less area than full yellow card      # fraction of region pixels that must be yellow
 
 # --- Template confidence ---
 TEMPLATE_THRESHOLD = 0.95
