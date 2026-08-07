@@ -1,5 +1,4 @@
 import logging
-import os
 import re
 import cv2
 import numpy as np
@@ -8,7 +7,6 @@ from PIL import Image
 
 import config
 from adb import ADB
-from detector import find_template
 
 logger = logging.getLogger(__name__)
 _unknown_log = open("unknown_quests.log", "a", buffering=1)
@@ -17,7 +15,6 @@ _unknown_log = open("unknown_quests.log", "a", buffering=1)
 def ocr_quest_text(img: np.ndarray) -> str:
     x, y, w, h = config.QUEST_TEXT_REGION
     crop = img[y:y+h, x:x+w]
-    # upscale 3x — more pixels = better Tesseract accuracy on small game text
     crop = cv2.resize(crop, (w * 3, h * 3), interpolation=cv2.INTER_CUBIC)
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
     pil = Image.fromarray(gray)
@@ -26,10 +23,8 @@ def ocr_quest_text(img: np.ndarray) -> str:
 
 
 def dispatch_quest(text: str) -> str:
-    t = re.sub(r'\d+\s*/\s*\d+', '', text.lower())  # strip "N/M" progress counters
+    t = re.sub(r'\d+\s*/\s*\d+', '', text.lower())
     if "gacha" in t:
-        if "cookie" in t or "char" in t:
-            return "pull_gacha"
         return "pull_gacha"
     if "chest" in t or "inventory" in t:
         return "use_chest"
@@ -40,7 +35,7 @@ def dispatch_quest(text: str) -> str:
     if "stage" in t or "clear" in t:
         return "wait_stage"
     if "times" in t:
-        return "bake_oven"  # bake quest keywords garbled by icon; "times" is reliable
+        return "bake_oven"
     _unknown_log.write(f"{text}\n")
     logger.warning("Unknown quest: %r", text)
     return "unknown"
@@ -62,9 +57,9 @@ def pull_gacha(adb: ADB) -> None:
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["pull_x10"])
     adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["back"])        # cancel animation
-    adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["back"])        # close gacha screen
+    adb.tap(*config.NAV["back"])           # cancel animation
+    adb.sleep(config.GACHA_RESULT_WAIT)    # wait for results cards to flip in
+    adb.tap(*config.NAV["back"])           # close results/gacha screen
     adb.sleep(config.NAV_WAIT)
 
 
@@ -75,9 +70,9 @@ def use_chest(adb: ADB) -> None:
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["use_chest_btn"])
     adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.TOP_CENTER_DISMISS)  # dismiss result popup (tap upper half)
-    adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["back"])         # close inventory screen
+    adb.tap(*config.TOP_CENTER_DISMISS)    # dismiss reward popup
+    adb.sleep(config.POPUP_FADE_WAIT)      # wait for fade-out (0.4s)
+    adb.tap(*config.NAV["back"])           # close inventory
     adb.sleep(config.NAV_WAIT)
 
 
@@ -89,23 +84,10 @@ def wait_enemies(adb: ADB) -> None:
     adb.sleep(config.CHECK_INTERVAL)
 
 
-_START_BAKE_TEMPLATE = os.path.join("templates", "start_bake_btn.png")
-
-
-def bake_oven(adb: ADB, get_screenshot, check_interrupts=None) -> None:
+def bake_oven(adb: ADB) -> None:
     adb.tap(*config.NAV["oven"])
     adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["start_bake_btn"])
-    adb.sleep(config.NAV_WAIT)
-    while True:
-        img = get_screenshot()
-        if check_interrupts is not None:
-            if check_interrupts(img, adb):
-                img = get_screenshot()   # refresh after interrupt handled
-        if find_template(img, _START_BAKE_TEMPLATE) is not None:
-            break
-        adb.sleep(config.CHECK_INTERVAL)
-    adb.tap(*config.NAV["back"])
+    adb.tap(*config.NAV["start_bake_btn"])  # Start closes panel, returns to battle
     adb.sleep(config.NAV_WAIT)
 
 

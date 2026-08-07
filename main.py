@@ -83,11 +83,8 @@ def run_loop(adb: ADB) -> None:
             quest_type = dispatch_quest(text)
             logger.info("Quest: %r -> %s", text, quest_type)
 
-            if quest_type == "bake_oven":
-                HANDLERS["bake_oven"](adb, adb.screenshot, check_global_interrupts)
-            elif quest_type in HANDLERS:
+            if quest_type in HANDLERS:
                 HANDLERS[quest_type](adb)
-            # unknown: dispatch_quest already logged it
 
             time.sleep(config.CHECK_INTERVAL)
 
