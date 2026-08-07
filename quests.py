@@ -1,6 +1,12 @@
 import logging
 import re
 import warnings
+
+warnings.filterwarnings("ignore", message=r".*pin_memory.*")
+warnings.filterwarnings("ignore", message=r".*quantize_per_tensor.*")
+warnings.filterwarnings("ignore", message=r".*GPU.*", category=UserWarning)
+warnings.filterwarnings("ignore", message=r".*CUDA.*", category=UserWarning)
+
 import cv2
 import numpy as np
 
@@ -75,7 +81,7 @@ def pull_gacha(adb: ADB) -> None:
     adb.tap(*config.NAV["back"])           # close gacha screen
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["quest_tap"])      # reopen quest panel on main screen
-    adb.sleep(config.NAV_WAIT)
+    adb.sleep(config.NAV_WAIT + 0.1)
 
 
 def use_chest(adb: ADB) -> None:
@@ -104,8 +110,8 @@ def wait_enemies(adb: ADB) -> None:
 def bake_oven(adb: ADB) -> None:
     adb.tap(*config.NAV["oven"])
     adb.sleep(config.NAV_WAIT)
-    adb.tap(*config.NAV["start_bake_btn"])  # Start closes panel, returns to battle
-    adb.sleep(config.NAV_WAIT)
+    adb.tap(*config.NAV["start_bake_btn"])
+    adb.sleep(config.BAKE_WAIT)            # wait for auto-bake to finish before next back tap
 
 
 HANDLERS = {

@@ -97,6 +97,7 @@ def test_bake_oven_taps_oven_then_start():
         "start_bake_btn": (500, 1700),
     }
     config.NAV_WAIT = 0
+    config.BAKE_WAIT = 0
     bake_oven(adb)
     taps = [c.args for c in adb.tap.call_args_list]
     assert (380, 1720) in taps

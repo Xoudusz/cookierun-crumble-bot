@@ -37,6 +37,10 @@ def check_global_interrupts(img: np.ndarray, adb: ADB) -> bool:
     if is_yellow(img, config.REPEATABLE_REGION):
         logger.info("Quest claimable — claiming")
         claim_quest(adb)
+        adb.tap(*config.NAV["back"])
+        adb.sleep(config.NAV_WAIT)
+        adb.tap(*config.NAV["quest_tap"])
+        adb.sleep(config.NAV_WAIT)
         return True
 
     return False
@@ -77,6 +81,10 @@ def run_loop(adb: ADB) -> None:
             if is_yellow(img, config.QUEST_CARD_REGION):
                 logger.info("Quest claimable — claiming")
                 claim_quest(adb)
+                adb.tap(*config.NAV["back"])
+                adb.sleep(config.NAV_WAIT)
+                adb.tap(*config.NAV["quest_tap"])
+                adb.sleep(config.NAV_WAIT)
                 continue
 
             text = ocr_quest_text(img)
