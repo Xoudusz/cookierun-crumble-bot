@@ -41,14 +41,12 @@ def test_dismiss_claimed_popup_taps_x():
     adb.tap.assert_called_once_with(360, 900)
 
 
-def test_claim_quest_taps_claim_then_dismisses():
+def test_claim_quest_taps_claim():
     adb = _mock_adb()
     config.CLAIM_BTN = (600, 100)
-    config.CLAIMED_X_BTN = (360, 900)
     config.CLAIM_WAIT = 0
     claim_quest(adb)
-    assert adb.tap.call_args_list[0] == call(600, 100)
-    assert adb.tap.call_args_list[1] == call(360, 900)
+    adb.tap.assert_called_once_with(600, 100)
 
 
 def test_pull_pet_gacha_navigates_and_pulls():
