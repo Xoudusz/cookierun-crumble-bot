@@ -6,8 +6,9 @@ MUMU_ADB_PORT = 7555
 
 # --- Timings ---
 CHECK_INTERVAL = 5       # seconds between main loop ticks
-NAV_WAIT       = 0.8     # seconds after each tap before screenshot
-CLAIM_WAIT     = 0.6     # seconds after tapping claim before dismissing popup
+NAV_WAIT            = 0.3   # seconds after each tap (~3 taps/sec)
+CLAIM_WAIT          = 0.3   # seconds after tapping claim
+BETTER_ITEM_WAIT    = 30    # seconds to wait after dismissing better-item popup (game transitions)
 
 # --- Screen ---
 SCREEN_W = 1080

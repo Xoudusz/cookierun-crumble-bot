@@ -30,7 +30,7 @@ def check_global_interrupts(img: np.ndarray, adb: ADB) -> bool:
         if find_template(img, _EQUIP_BTN_TEMPLATE) is not None:
             logger.info("Better item popup — dismissing")
             adb.tap(*config.TOP_CENTER_DISMISS)
-            adb.sleep(config.NAV_WAIT)
+            adb.sleep(config.BETTER_ITEM_WAIT)
             return True
 
     # 2. Repeatable quest overlay
