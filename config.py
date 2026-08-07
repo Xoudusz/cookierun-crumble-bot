@@ -1,5 +1,3 @@
-import pytesseract
-
 # --- ADB ---
 MUMU_ADB_HOST = "127.0.0.1"
 MUMU_ADB_PORT = 7555
@@ -47,6 +45,3 @@ NAV = {
     "start_bake_btn":(500, 1700),   # "Start" button on Auto Bake screen
 }
 
-# --- Tesseract ---
-TESSERACT_CMD = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD

@@ -1,5 +1,6 @@
 import logging
 import re
+import warnings
 import cv2
 import numpy as np
 
@@ -11,8 +12,14 @@ _reader = None
 def _get_reader():
     global _reader
     if _reader is None:
-        import easyocr
-        _reader = easyocr.Reader(['en'], gpu=False)
+        import os
+        os.environ.setdefault("EASYOCR_MODULE_PATH", os.path.expanduser("~/.EasyOCR"))
+        logging.getLogger("easyocr").setLevel(logging.ERROR)
+        logging.getLogger("torch").setLevel(logging.ERROR)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            import easyocr
+            _reader = easyocr.Reader(['en'], gpu=False, verbose=False)
     return _reader
 
 logger = logging.getLogger(__name__)
@@ -67,6 +74,8 @@ def pull_gacha(adb: ADB) -> None:
     adb.sleep(config.NAV_WAIT + 0.1)       # extra 0.1s before closing gacha
     adb.tap(*config.NAV["back"])           # close gacha screen
     adb.sleep(config.NAV_WAIT)
+    adb.tap(*config.NAV["quest_tap"])      # reopen quest panel on main screen
+    adb.sleep(config.NAV_WAIT)
 
 
 def use_chest(adb: ADB) -> None:
@@ -79,6 +88,8 @@ def use_chest(adb: ADB) -> None:
     adb.tap(*config.TOP_CENTER_DISMISS)    # dismiss reward popup
     adb.sleep(config.POPUP_FADE_WAIT)      # wait for fade-out (0.4s)
     adb.tap(*config.NAV["back"])           # close inventory
+    adb.sleep(config.NAV_WAIT)
+    adb.tap(*config.NAV["quest_tap"])      # reopen quest panel on main screen
     adb.sleep(config.NAV_WAIT)
 
 

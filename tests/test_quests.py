@@ -59,7 +59,8 @@ def test_pull_gacha_navigates_and_pulls():
     taps = [c.args for c in adb.tap.call_args_list]
     assert (820, 1101) in taps
     assert (550, 1550) in taps
-    assert taps.count((540, 1860)) == 3  # cancel anim + close results + close gacha
+    assert taps.count((540, 1860)) == 3   # cancel anim + close results + close gacha
+    assert taps.count((820, 1101)) == 2   # initial quest_tap + reopen after gacha
 
 
 def test_use_chest_navigates_and_uses():
@@ -75,7 +76,7 @@ def test_use_chest_navigates_and_uses():
     config.POPUP_FADE_WAIT = 0
     use_chest(adb)
     taps = [c.args for c in adb.tap.call_args_list]
-    assert (820, 1101) in taps
+    assert taps.count((820, 1101)) == 2   # initial quest_tap + reopen after inventory
     assert (200, 1150) in taps
     assert (550, 850) in taps
     assert (540, 50) in taps
