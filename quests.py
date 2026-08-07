@@ -92,7 +92,7 @@ def use_chest(adb: ADB) -> None:
     adb.tap(*config.NAV["select_chest"])
     adb.sleep(config.NAV_WAIT)
     adb.tap(*config.NAV["use_chest_btn"])
-    adb.sleep(config.NAV_WAIT)
+    adb.sleep(config.POPUP_FADE_WAIT)      # wait for reward popup to appear
     adb.tap(*config.TOP_CENTER_DISMISS)    # dismiss reward popup
     adb.sleep(config.POPUP_FADE_WAIT)      # wait for fade-out (0.4s)
     adb.tap(*config.NAV["back"])           # close inventory

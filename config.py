@@ -5,7 +5,7 @@ MUMU_ADB_PORT = 7555
 # --- Timings ---
 CHECK_INTERVAL = 5       # seconds between main loop ticks
 NAV_WAIT            = 0.2   # seconds after each tap (most transitions <0.1s)
-CLAIM_WAIT          = 0.2   # seconds after tapping claim (new banner in 0.1s)
+CLAIM_WAIT          = 0.4   # seconds after tapping claim (animation clears ~0.3s)
 POPUP_FADE_WAIT     = 0.5   # seconds after dismissing chest reward popup (0.4s fade + 0.1)
 GACHA_RESULT_WAIT   = 0.8   # seconds after first back to cancel gacha anim (0.7s flip + 0.1)
 BETTER_ITEM_WAIT    = 30    # seconds to wait after dismissing better-item popup (game transitions)
